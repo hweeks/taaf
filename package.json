@@ -1,0 +1,17 @@
+{
+  "name": "transcode-across-a-fleet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ha-m1-top-buddi <idareutoemailme@hweeks.com>",
+  "license": "MIT",
+  "packageManager": "yarn@3.2.0",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "nodemon --exec \"go\" ./src",
+    "dev": "docker-compose up",
+    "dev-inner": "nodemon --ext go --exec \"go run\" --signal SIGINT ./src/",
+    "deps": "go mod download"
+  }
+}

@@ -1,0 +1,23 @@
+
+version: "3"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/be/src
+    ports:
+      - "3005:3005"
+    links:
+      - mysql-taff
+  mysql-taaf:
+    container_name: mysql-taaf
+    platform: linux/x86_64
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: this-just-is-not-good-practice
+    ports:
+      - "3306:3306"
+      - "33060:33060"
