@@ -40,17 +40,21 @@ graph TD
     C[CLI] --> B[TAAF Server]
     B --> L[local FS]
     L --> B
+    B -- http -->  D[(Database)]
+    D -- http -->  B
     end
     subgraph STORAGE
-    B --> S[AWS]
+    B -- http --> S[AWS]
     S --> Bucket[S3]
     Bucket --> S
-    S --> B
+    S -- http --> B
     end
     subgraph Machine Creation
-    B --> E[EC2]
+    B -- http --> E[EC2]
+    E --> WL[work load]
+    WL --> E
     E --> Bucket
     Bucket --> E
-    E --> B
+    E -- http --> B
     end
 ```
