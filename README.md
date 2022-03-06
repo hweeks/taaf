@@ -21,6 +21,13 @@ as a list:
 - topaz Enhance AI license
 - AWS account creds
 
+### local computer needs
+
+so there are a few thing u wanna make sure you've done here:
+
+- ansible is installed
+- the remote computer has enhance ai installed and the CLI is ready
+
 ## design
 
 this system is designed to work like this:
