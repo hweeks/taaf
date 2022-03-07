@@ -14,7 +14,7 @@ type VideoEntry struct {
 }
 
 func SeedData() {
-	res, err := QueryDB(
+	_, err := QueryDB(
 		`INSERT INTO video (
 			target_resolution, 
 			source_location,
@@ -23,5 +23,6 @@ func SeedData() {
 	if err != nil {
 		panic(1)
 	}
-	fmt.Println(res)
+	vids := GetVideosFromDB()
+	fmt.Println(vids)
 }

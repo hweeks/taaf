@@ -12,7 +12,10 @@ import (
 
 var db *sql.DB
 
+var db_config map[string]string
+
 func DataBase() {
+	create_and_return_config()
 	db = create_and_return_db()
 	pingErr := db.Ping()
 	if pingErr != nil {
@@ -21,13 +24,21 @@ func DataBase() {
 	fmt.Println("Connected!")
 }
 
+func create_and_return_config() map[string]string {
+	db_config = map[string]string{
+		"table":    "video",
+		"database": "taaf",
+	}
+	return db_config
+}
+
 func create_and_return_db() (db *sql.DB) {
 	cfg := mysql.Config{
 		User:                 "root",
 		Passwd:               "this-just-is-not-good-practice",
 		Net:                  "tcp",
 		Addr:                 "mysql-taaf:3306",
-		DBName:               "taaf",
+		DBName:               db_config["database"],
 		AllowNativePasswords: true,
 	}
 	var err error

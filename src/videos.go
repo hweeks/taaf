@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAllVideos(c *gin.Context) {
+func GetVideosFromDB() []VideoEntry {
 	var found_videos []VideoEntry
 	result, err := QueryDB("SELECT * from video")
 	if err != nil {
@@ -29,5 +29,10 @@ func GetAllVideos(c *gin.Context) {
 		}
 		found_videos = append(found_videos, inner_video)
 	}
+	return found_videos
+}
+
+func GetAllVideos(c *gin.Context) {
+	found_videos := GetVideosFromDB()
 	c.IndentedJSON(http.StatusOK, found_videos)
 }
