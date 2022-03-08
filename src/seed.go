@@ -4,15 +4,6 @@ import (
 	"fmt"
 )
 
-type VideoEntry struct {
-	ID               string `json:"id"`
-	TargetResolution string `json:"resolution"`
-	SourceLocation   string `json:"source_file"`
-	Created          string `json:"created"`
-	Updated          string `json:"updated"`
-	Progress         int    `json:"transcode_progress"`
-}
-
 func SeedData() {
 	_, err := QueryDB(
 		`INSERT INTO video (

@@ -95,3 +95,7 @@ func query_db(db *sql.DB, query string) (*sql.Rows, error) {
 func QueryDB(query string) (*sql.Rows, error) {
 	return query_db(db, query)
 }
+
+func GimmeTheDB() *sql.DB {
+	return db
+}
