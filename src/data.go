@@ -12,14 +12,24 @@ import (
 
 var db *sql.DB
 
-func DataBase() {
-	db = create_and_return_db()
+var db_config map[string]string
 
+func DataBase() {
+	create_and_return_config()
+	db = create_and_return_db()
 	pingErr := db.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
 	fmt.Println("Connected!")
+}
+
+func create_and_return_config() map[string]string {
+	db_config = map[string]string{
+		"table":    "video",
+		"database": "taaf",
+	}
+	return db_config
 }
 
 func create_and_return_db() (db *sql.DB) {
@@ -28,7 +38,7 @@ func create_and_return_db() (db *sql.DB) {
 		Passwd:               "this-just-is-not-good-practice",
 		Net:                  "tcp",
 		Addr:                 "mysql-taaf:3306",
-		DBName:               "",
+		DBName:               db_config["database"],
 		AllowNativePasswords: true,
 	}
 	var err error
@@ -36,20 +46,22 @@ func create_and_return_db() (db *sql.DB) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	pingErr := db.Ping()
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	fmt.Println("Connected!")
+	fmt.Println("database connected")
 	check_and_seed_table(db)
+	fmt.Println("database seeded")
 	return db
 }
 
 func check_and_seed_table(db *sql.DB) error {
 	db_query := `CREATE DATABASE IF NOT EXISTS taaf`
+	fmt.Println("database created")
 	query_db(db, db_query)
 	use_query := `USE taaf`
+	fmt.Println("on TAAF DB")
 	query_db(db, use_query)
 	query := `CREATE TABLE IF NOT EXISTS video(
 		video_id int primary key auto_increment, 
@@ -59,28 +71,31 @@ func check_and_seed_table(db *sql.DB) error {
 		created_at datetime default CURRENT_TIMESTAMP, 
 		updated_at datetime default CURRENT_TIMESTAMP
 	)`
-	rows, err := query_db(db, query)
+	_, err := query_db(db, query)
+	fmt.Println("table created")
 	if err != nil {
 		log.Printf("Error %s when getting rows affected", err)
 		return err
 	}
-	log.Printf("Rows affected when creating table: %d", rows)
+	fmt.Println("table created without error")
 	return nil
 }
 
-func query_db(db *sql.DB, query string) (int64, error) {
+func query_db(db *sql.DB, query string) (*sql.Rows, error) {
 	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancelfunc()
-	res, err := db.ExecContext(ctx, query)
+	res, err := db.QueryContext(ctx, query)
 	if err != nil {
-		log.Printf("Error %s when creating rooms table", err)
-		return 0, err
+		log.Printf("Error %s when running query", err)
+		return nil, err
 	}
-	rows, err := res.RowsAffected()
-	if err != nil {
-		log.Printf("Error %s when getting rows affected", err)
-		return 0, err
-	}
-	log.Printf("Rows affected when creating table: %d", rows)
-	return rows, nil
+	return res, nil
+}
+
+func QueryDB(query string) (*sql.Rows, error) {
+	return query_db(db, query)
+}
+
+func GimmeTheDB() *sql.DB {
+	return db
 }

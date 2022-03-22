@@ -15,6 +15,8 @@ USER root
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - &&\
   apt-get install -y nodejs && npm i -g yarn
 
+RUN apt-get install -y python3 && apt-get install -y python3-pip
+
 RUN groupadd --gid $GID $GROUP &&\
   useradd --uid $UID --gid $GID $USER
 
